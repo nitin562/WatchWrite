@@ -19,7 +19,7 @@ export default function FormInput({
           onClick={func}
         />
         <input
-          className=" w-[90%] text-xl font-Dosis caret-emerald-400 text-white outline-none border-0 indent-2 bg-transparent"
+          className=" w-[90%] text-xl font-Dosis caret-emerald-400 text-emerald-200 group-focus-within:text-white outline-none border-0 indent-2 bg-transparent"
           type={type}
           placeholder={holder}
         />
