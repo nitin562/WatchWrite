@@ -1,7 +1,5 @@
 const { validationResult } = require("express-validator");
 const User = require("../models/user.models");
-const { hashPassword, verifyPassword } = require("../Utils/Helper/Password");
-const { createToken } = require("../Utils/Helper/Token");
 const Register = async (req, res) => {
   try {
     const error = validationResult(req);
@@ -19,10 +17,10 @@ const Register = async (req, res) => {
     //means you need to register it
     //Hash the password
     const { password, name } = req.body;
-    const HashedPassword = await hashPassword(password);
+    
     const Record = await User.create({
       userName: name,
-      password: HashedPassword,
+      password,
       email,
     });
     const token = createToken(Record._id);
