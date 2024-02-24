@@ -8,6 +8,7 @@ const userSchema = new db.Schema(
       required: true,
       lowercase: true,
       trim: true,
+      unique:true
     },
     fullName: {
       type: String,
@@ -41,7 +42,6 @@ const userSchema = new db.Schema(
     },
     RefreshToken: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

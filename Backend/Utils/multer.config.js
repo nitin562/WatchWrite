@@ -4,7 +4,7 @@ const Storage=multer.diskStorage({
         cb(null,"./public")
     },
     filename:function(req,file,cb){
-        cb(null,file.originalname+"-"+Date.now())
+        cb(null,`${Date.now()}-${file.originalname}`)
     }
 })
 const upload=multer({storage:Storage})
