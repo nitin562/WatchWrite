@@ -1,7 +1,8 @@
-const { check, param } = require("express-validator");
+const { check, query } = require("express-validator");
 const express = require("express");
 const upload = require("../Utils/multer.config.js");
-const { Register, Login } = require("../controllers/user.controller");
+const { Register, Login, logout } = require("../controllers/user.controller");
+const verifyJWT = require("../Utils/Auth.middleware.js");
 const Router = express.Router();
 //success=-1 error from client
 //success=0 error from server
@@ -39,14 +40,16 @@ Router.post(
 
 //2.Login
 Router.get(
-  "/login/:email/:password",
+  "/login",
   [
-    param("email", "Email is invalid").isEmail(),
-    param("password", "Password must be of atleast 6 characters").isLength({
+    query("email", "Email is invalid").if(query("userName").not().exists()).isEmail(),
+    query("userName", "userName must be of atleast 3 characters").if(query("email").not().exists()).isLength({min:3}),
+    query("password", "Password must be of atleast 6 characters").isLength({
       min: 6,
     }),
   ],
   Login
 );
-
+//3.
+Router.get("/logout",verifyJWT,logout)
 module.exports = Router;
