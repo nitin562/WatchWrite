@@ -1,7 +1,7 @@
 const { check, query } = require("express-validator");
 const express = require("express");
 const upload = require("../Utils/multer.config.js");
-const { Register, Login, logout } = require("../controllers/user.controller");
+const { Register, Login, logout, RefreshToken } = require("../controllers/user.controller");
 const verifyJWT = require("../Utils/Auth.middleware.js");
 const Router = express.Router();
 //success=-1 error from client
@@ -50,6 +50,8 @@ Router.get(
   ],
   Login
 );
-//3.
+//3.Refresh the token
+Router.get("/refresh",RefreshToken)
+//4. Logout
 Router.get("/logout",verifyJWT,logout)
 module.exports = Router;

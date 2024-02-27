@@ -4,6 +4,7 @@ const asyncHandler  = require("../Utils/asyncHandler.js");
 const APIerror = require("../Utils/APIerror.js");
 const APIresponse=require("../Utils/APIresponse.js")
 const uploadToCloudinary = require("../Utils/Cloudinary.config.js");
+const jwt=require("jsonwebtoken")
 const Register = asyncHandler(async function(req,res){
   console.log(req.body)
   const DataInValids=validationResult(req)
@@ -59,19 +60,14 @@ const Login=asyncHandler(async(req,res)=>{
     throw new APIerror(400,{password:true},"Wrong Password")
   }
   //verified
-  const refreshtoken=client.createRefreshToken()
-  const accessToken=client.createAccessToken()
-  //save this refresh token to db
-  client.RefreshToken=refreshtoken
-  const loginedUser=await client.save()
-  const data=await User.findById(loginedUser._id).select("-password -RefreshToken")
+  const {refreshToken,accessToken,data}=await generateCredientals(client)
   const options={
     httpOnly:true,
     secure:true,
     sameSite:true,
     domain:process.env.base
   }
-  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshtoken,options).send(new APIresponse(200,data,"Logined"))
+  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).send(new APIresponse(200,data,"Logined"))
 
 })
 const logout=asyncHandler(async(req,res)=>{
@@ -82,4 +78,50 @@ const logout=asyncHandler(async(req,res)=>{
   return res.status(200).send(new APIresponse(200,client,"Logout"))
   
 })
-module.exports = { Register, Login,logout };
+
+const RefreshToken=asyncHandler(async()=>{
+  //here we know, we dont have accessToken
+  const RefreshToken=req?.cookies?.refreshToken || req.header("RefreshToken")
+  if(!RefreshToken){
+    throw new APIerror(401,{},"Unauthorized")
+  }
+  //now check the refreshToken
+  let extractData;
+  jwt.verify(RefreshToken,process.env.REFRESH_SECRET_KEY,(err,val)=>{
+    if(err){
+      throw new APIerror(401,{},"Unauthorized")
+    }
+    else{
+      extractData=val;
+    }
+  })
+  //client 
+  const {id}=extractData
+  const client=await User.findById(id)
+  if(!client){
+    throw new APIerror(401,{},"Unauthorized")
+  }
+  //let create new token
+  //but suppose the given refresh token is valid but not for your id, it is of other client then other client account will be given to you that is not good
+  //check stored refreshtoken is equal to given refreshtoken
+  if(client.RefreshToken!==RefreshToken){
+    throw new APIerror(401,{},"Unauthorized")
+  }
+  //now create new access and refresh token
+  const {refreshToken,accessToken,data}=generateCredientals(client)
+  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).send(new APIresponse(200,data,"Refreshed"))
+})
+
+// -----------------------------------------------------------------
+// utils for current
+const generateCredientals=async(client)=>{
+  const refreshToken=client.createRefreshToken()
+  const accessToken=client.createAccessToken()
+  //save this refresh token to db
+  client.RefreshToken=refreshToken
+  const loginedUser=await client.save()
+  const data=await User.findById(loginedUser._id).select("-password -RefreshToken")
+  return {refreshToken,accessToken,data}
+}
+//------------------------------------------------------------------
+module.exports = {Register,Login,logout,RefreshToken} ;
