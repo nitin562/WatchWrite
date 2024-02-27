@@ -2,6 +2,8 @@ import React from "react";
 
 export default function FormInput({
   type,
+  state,
+  setstate,
   holder,
   icon,
   func,
@@ -22,6 +24,8 @@ export default function FormInput({
           className=" w-[90%] text-xl font-Dosis caret-emerald-400 text-emerald-200 group-focus-within:text-white outline-none border-0 indent-2 bg-transparent"
           type={type}
           placeholder={holder}
+          value={state}
+          onChange={(e)=>setstate(e.target.value)}
         />
       </div>
       <p className={`${errState ? "h-8" : "h-0 overflow-hidden"} text-red-400 text-sm font-Abel text-right mt-1`}>{error}</p>

@@ -5,6 +5,7 @@ export default {
     extend: {
       backgroundImage: {
         LoginBG: "url('./loginBgPng.png')",
+        CoverImage: "url('./default-cover.jpeg')"
       },
       fontFamily: {
         AR_One_Sans: ["AR One Sans"],
