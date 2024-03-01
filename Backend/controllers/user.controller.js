@@ -22,22 +22,22 @@ const Register = asyncHandler(async function(req,res){
   }
   //Not Existed
   //file upload
-  console.log(req.files)
-  if(!req.files || !req.files.avatar || req.files.avatar.length===0){
-    throw new APIerror(400,{avatar:{msg:"Avatar must be provided"}},"Client Side error")
-  }
-  const Avatar=req.files.avatar[0].path //it is always present as it validates
-  let CoverImage
-  if(req.files && req.files.coverImage && req.files.coverImage.length>0){
-    CoverImage=req.files.coverImage[0].path
-  }
+  // console.log(req.files)
+  // if(!req.files || !req.files.avatar || req.files.avatar.length===0){
+  //   throw new APIerror(400,{avatar:{msg:"Avatar must be provided"}},"Client Side error")
+  // }
+  // const Avatar=req.files.avatar[0].path //it is always present as it validates
+  // let CoverImage
+  // if(req.files && req.files.coverImage && req.files.coverImage.length>0){
+  //   CoverImage=req.files.coverImage[0].path
+  // }
   
-  //cloudinary
-  const responseAvatar=await uploadToCloudinary(Avatar)
-  const responseCoverImage=await uploadToCloudinary(CoverImage)
-  //Save
+  // //cloudinary
+  // const responseAvatar=await uploadToCloudinary(Avatar)
+  // const responseCoverImage=await uploadToCloudinary(CoverImage)
+  // //Save
   const SaveToDB=await User.create({
-    userName,fullName,email,password,avatar:responseAvatar.url,coverImage:responseCoverImage?.url||""
+    userName,fullName,email,password
   })
   return res.status(200).send(new APIresponse(200,SaveToDB,"Registered"))
 })
@@ -65,9 +65,9 @@ const Login=asyncHandler(async(req,res)=>{
     httpOnly:true,
     secure:true,
     sameSite:true,
-    domain:process.env.base
+    domain:process.env.domain
   }
-  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).send(new APIresponse(200,data,"Logined"))
+  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).send(new APIresponse(200,{data,refreshToken,accessToken},"Logined"))
 
 })
 const logout=asyncHandler(async(req,res)=>{
@@ -109,7 +109,7 @@ const RefreshToken=asyncHandler(async()=>{
   }
   //now create new access and refresh token
   const {refreshToken,accessToken,data}=generateCredientals(client)
-  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).send(new APIresponse(200,data,"Refreshed"))
+  return res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).send(new APIresponse(200,{data,accessToken},"Refreshed"))
 })
 
 // -----------------------------------------------------------------

@@ -10,18 +10,20 @@ const Router = express.Router();
 //success=-2 already registered in sign or not registered in Login
 //success=-3 password is wrong in login
 //1.Sign
+// upload.fields([
+//   {
+//     name: "avatar",
+//     maxCount: 1,
+//   },
+//   {
+//     name: "coverImage",
+//     maxCount: 1,
+//   },
+// ])
 Router.post(
   "/sign",
-  upload.fields([
-    {
-      name: "avatar",
-      maxCount: 1,
-    },
-    {
-      name: "coverImage",
-      maxCount: 1,
-    },
-  ]),
+  upload.none()
+  ,
   [
     check("userName", "Name must be of atleast 3 characters").isLength({
       min: 3,
