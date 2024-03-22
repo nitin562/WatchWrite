@@ -10,6 +10,14 @@ const userSchema = new db.Schema(
       trim: true,
       unique:true
     },
+    GithubUsername:{
+      type:String,
+      default:undefined
+    },
+    GitId:{
+      type:String,
+      default:undefined
+    },
     fullName: {
       type: String,
       required: true,
@@ -19,7 +27,6 @@ const userSchema = new db.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     password: {
       type: String,
@@ -31,6 +38,7 @@ const userSchema = new db.Schema(
     },
     coverImage: {
       type: String, //url
+      default: `${process.env.base}/cover.jpeg`,
     },
     watchHistory: {
       type: [

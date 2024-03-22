@@ -7,6 +7,19 @@ export default {
         LoginBG: "url('./loginBgPng.png')",
         CoverImage: "url('./default-cover.jpeg')"
       },
+      animation:{
+        GoLeft:'toLeft 1s ease forwards',
+        ReduceTime:'reduceToZero 3s ease forwards'
+      },
+      keyframes:{
+        toLeft:{
+          '100%':{'transform':'translateX(0)'}
+        },
+        reduceToZero:{
+          '0%':{'margin-left':'0%'},
+          '100%':{'width':'0','margin-left':'100%'}
+        }
+      },
       fontFamily: {
         AR_One_Sans: ["AR One Sans"],
         Abel: ["Abel"],

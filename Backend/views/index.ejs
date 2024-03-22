@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Complete</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=AR+One+Sans&family=Abel&family=Amaranth&family=Anton&family=Arsenal&family=Barlow:wght@300&family=Bruno+Ace+SC&family=Comfortaa&family=Comforter&family=Dosis:wght@200..800&family=Ephesis&family=Jost:wght@100;400&family=Maven+Pro&family=Oxygen&family=PT+Sans+Narrow&family=Palanquin:wght@300&family=Philosopher&family=Quicksand:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="http://localhost:8000/index.css">
+</head>
+
+<body>
+    <div class="cont">
+        <p>Redirecting to Page...</p>
+    </div>
+</body>
+<script>
+   
+    const doOperation=()=>{
+        let url='<%- baseUrl %>'
+        let status='<%-status%>'
+        console.log(status,url, typeof status)
+        if(status==0){
+            console.log("login")
+            const appWindow=window.open(`${url}/login`)
+        }
+        else{
+            let userId='<%- id %>'
+            console.log(userId)
+            const appWindow=window.open(`${url}?server=${userId}`,"_self")
+            
+        }
+        
+    }
+    setTimeout(()=>{
+        doOperation()
+    },1000)
+</script>
+</html>

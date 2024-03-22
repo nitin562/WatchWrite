@@ -10,8 +10,8 @@ const ContextProvider = (props) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [resetPassword, setResetPassword] = useState("");
-
+  const [RePassword, setRePassword] = useState("");
+  const [globalErrors, setGlobalErrors] = useState({"sign":[]})
   //
   return (
     <context.Provider
@@ -24,8 +24,8 @@ const ContextProvider = (props) => {
         fullName,
         password,
         setPassword,
-        resetPassword,
-        setResetPassword,
+        RePassword, setRePassword,
+        globalErrors,setGlobalErrors
       }}
     >
       {props.children}
